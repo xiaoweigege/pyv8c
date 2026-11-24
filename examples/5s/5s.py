@@ -32,9 +32,9 @@ from pyv8c.network.curl_cffi import CurlCffiTransport
 # URL = "https://cn.airbusan.com/content/individual"
 URL = "https://simple.ripley.com.pe/"
 # URL = 'https://steamdb.info/login/'
-URL = 'https://stackoverflow.com/questions/59187905/proper-procedure-to-restart-reload-apache-php-fpm-combo'
+# URL = 'https://stackoverflow.com/questions/59187905/proper-procedure-to-restart-reload-apache-php-fpm-combo'
 
-DEFAULT_PROXY = 'http://127.0.0.1:7890'
+DEFAULT_PROXY = 'http://127.0.0.1:9000'
 CHECKBOX = 'input[type="checkbox"]'
 
 
@@ -95,10 +95,12 @@ async def run(*, proxy=DEFAULT_PROXY, timeout=120):
             cache=False, threaded_loaders=True, proxy=proxy, gpu_enabled=False,
             resource_interceptor=trim_resources,
             http_engine=engine,
-            http_options={'impersonate': 'chrome150', 'timeout': 20, 'retry': 5},
+            http_options={'impersonate': 'chrome150', 'timeout': 20, 'retry': 5, 'verify': False},
             ws_options={'ssl': unverified_tls()},
     ) as browser:
-        page = browser.new_profile().new_page()
+        page = browser.new_profile().new_page(environment={
+            "timezone": "America/Los_Angeles",
+            "languages": ["en-US", "en"], })
         await page.goto(URL, wait_until='domcontentloaded', timeout=min(30, timeout))
         title = page.evaluate('document.title')
         logger.info(
