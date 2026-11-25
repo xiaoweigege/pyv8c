@@ -34,7 +34,7 @@ URL = "https://simple.ripley.com.pe/"
 URL = 'https://steamdb.info/login/'
 # URL = 'https://stackoverflow.com/questions/59187905/proper-procedure-to-restart-reload-apache-php-fpm-combo'
 # -country-vn
-DEFAULT_PROXY = 'http://127.0.0.1:9000'
+DEFAULT_PROXY = 'http://127.0.0.1:7890'
 
 CHECKBOX = 'input[type="checkbox"]'
 
@@ -100,12 +100,13 @@ async def run(*, proxy=DEFAULT_PROXY, timeout=120):
             http_options={'impersonate': 'chrome150', 'timeout': 20, 'retry': 5, 'verify': False},
             ws_options={'ssl': unverified_tls()},
     ) as browser:
-        page = (await browser.new_profile_async()).new_page(environment={
-            # "timezone": "America/Los_Angeles",
-            # "languages": ["en-US", "en"],
-            # "language": 'en-US',
-        }
-        )
+        page = (await browser.new_profile_async(
+            # environment={
+            #     "timezone": "America/Los_Angeles",
+            #     "languages": ["en-US", "en"],
+            #     "language": 'en-US',
+            # }
+        )).new_page()
         await page.goto(URL, wait_until='domcontentloaded', timeout=min(30, timeout))
         title = page.evaluate('document.title')
         logger.info(page.evaluate('Date()'))
