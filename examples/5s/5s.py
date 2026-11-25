@@ -100,7 +100,7 @@ async def run(*, proxy=DEFAULT_PROXY, timeout=120):
             http_options={'impersonate': 'chrome150', 'timeout': 20, 'retry': 5, 'verify': False},
             ws_options={'ssl': unverified_tls()},
     ) as browser:
-        page = browser.new_profile().new_page(environment={
+        page = (await browser.new_profile_async()).new_page(environment={
             # "timezone": "America/Los_Angeles",
             # "languages": ["en-US", "en"],
             # "language": 'en-US',
